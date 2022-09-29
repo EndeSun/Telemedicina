@@ -1,0 +1,164 @@
+<!-- Del html va al main y del main va al servidor que es donde lo comprueba -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <title>RestApi REST</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="medico.css" rel="stylesheet" type="text/css"/>
+    <style>
+      .seccion {
+        display: none;
+      }
+      .activa {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Título de toda la aplicación -->
+    <h1>Aplicación RestApi</h1>
+
+    <!-- Interfaz del login para el médico -->
+    <div id="login" class="seccion activa">
+      <h2>Login del Médico</h2>
+
+      <form>
+        <div>
+          Usuario: <input autocomplete="off" id="usuario" />
+        </div>
+
+        <div>
+          Contraseña: <input autocomplete="off" type="password" id="password" />
+        </div>
+      </form>
+      <!-- Si tengo el botón dentro del formulario me va a dar error. ??? -->
+      <button onclick="logear()">Entrar</button>
+    </div>
+
+    <!-- Menú principal del médico donde verá sus listados de pacientes -->
+    <div id="menu-principal" class="seccion">
+      <h2>Menú principal del Médico</h2>
+      
+      <p id="saludo"></p>
+
+      <fieldset>
+        <legend>Pacientes que tienes asignados: </legend>
+        <dl id="listadoPaciente"></dl>
+      </fieldset>
+
+      <button onclick="cambiarSeccion('newUser')">
+        Agregar un nuevo paciente
+      </button>
+      <button onclick="datosUsuario()">Datos de usuario</button>
+      <button onclick="salir()">Salir</button>
+    </div>
+
+    <!-- Datos del usuario médico -->
+    <div id="datos-usuarios" class="seccion">
+      <h2>Datos del usuario</h2>
+      <fieldset>
+        <p id="infoMedico"></p>
+      </fieldset>
+      <button onclick="cambiarSeccion('menu-principal')">Volver a Menú</button>
+      <button onclick="salir()">Salir</button>
+    </div>
+
+
+
+
+    <!-- Interfaz para crear el nuevo usuario -->
+    <div id="newUser" class="seccion">
+      <form>
+      <fieldset>
+        <legend>Agregar un nuevo paciente</legend>
+
+        <div><strong>Nombre: <input autocomplete="off" id="nombrePaciente" /></strong></div>
+
+        <div><strong>Fecha de nacimiento: <input autocomplete="off" id="bornDate" type="date" /></strong></div>
+
+        <div>
+          <strong>Género:</strong>
+          <select id="gender">
+            <option disabled selected>Seleccione</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femernino">Femenino</option>
+          </select>
+        </div>
+
+        <div><strong>Código de acceso: <input autocomplete="off" id="accesCode" /></strong></div>
+
+        <div><strong>Observaciones: </strong><p><textarea autocomplete="off" id="observations"></textarea></div></p>
+      </fieldset>
+      </form>
+      <button onclick="addPacienteDentro()">Añadir</button>
+      <button onclick="cambiarSeccion('menu-principal')">Volver a Menú</button>
+    </div>
+
+
+
+
+    <!-- Interfaz para el expediente de cada paciente -->
+    <div id="datos-paciente" class="seccion">
+      <fieldset>
+        <legend>Datos del paciente: </legend>
+      <dl id="infoPaciente"></dl>
+      <p class="parFiltro">Filtrar muestras por variable</p>
+      <dl><select id="filtroVar">
+        <option disabled selected>Seleccione una variable de filtro</option>
+        <option>PESO (Kg)</option>
+        <option>METROS ANDADOS</option>
+        <option>METROS CORRIDOS</option>
+        <option>MINUTOS DE GIMNASIA REALIZADOS</option>
+        <option>TENSIÓN SANGUÍNEA MEDIA (MMGH)</option>
+        <option>SATURACIÓN DE OXÍGENO MEDIA</option>
+        <option>Mostrar todas las muestras</option>
+      </select></dl>
+      <dl id="infoMuestras"></dl>
+    </fieldset>
+
+      <button onclick="volverDeDatosPaciente()">Volver a Menú</button>
+      <button onclick="salirDeDatosPaciente()">Salir</button>
+    </div>
+
+
+    <!-- Interfaz para modificar los datos -->
+    <div id="modificar-paciente" class="seccion">
+      <fieldset>
+        <legend>Introduce los datos para cambiar: </legend>
+      <form>
+      <div><strong>Nombre: </strong> <input autocomplete="off" id="nombrePacienteCambio" /></div>
+
+      <div><strong> Fecha de nacimiento: </strong><input autocomplete="off" id="bornDateCambio" type="date" /></div>
+
+      <div>
+        <strong>Género: </strong>
+        <select id="genderCambio">
+        </select>
+      </div>
+
+      <div><strong>Médico responsable: </strong><input autocomplete="off" id="medicoCambio" /></div>
+
+      <div><strong>Código de acceso: </strong><input autocomplete="off" id="accesCodeCambio" /></div>
+
+      <div><strong>Observaciones:</strong> <p><textarea autocomplete="off" id="observationsCambio"></textarea></div></p>
+    </form>
+      <p>
+        <button onclick="actualizarDatosPaciente()">Acualizar cambios</button>
+      </p>
+    </fieldset>
+      <button onclick="cambiarSeccion('datos-paciente')">
+        Volver al expediente del paciente
+      </button>
+      <button onclick="cambiarSeccion('menu-principal')">Volver a Menú</button>
+      <button onclick="salir()">Salir</button>
+    </div>
+
+
+
+    <!-- Referenciando a los archivos exteriores -->
+    <script src="rest.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

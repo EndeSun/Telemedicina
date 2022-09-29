@@ -1,0 +1,147 @@
+<!-- Del html va al main y del main va al servidor que es donde lo comprueba -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <title>RestApi RPC</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="paciente.css" rel="stylesheet" type="text/css" />
+    <style>
+      .seccion {
+        display: none;
+      }
+      .activa {
+        display: block;
+      }
+    </style>
+  </head>
+
+  
+  <body>
+    <h1>Aplicación del paciente</h1>
+
+    <!-- Interfaz del login para el paciente -->
+    <div id="loginPac" class="seccion activa">
+      <form>
+        <h2>Login del Paciente</h2>
+        <div>
+          Código de acceso:
+          <input type="password" autocomplete="off" id="accessCode" />
+        </div>
+      </form>
+
+      <button onclick="entrar()">Entrar</button>
+    </div>
+
+    <!-- Menú principal del médico donde verá sus listados de pacientes -->
+    <div id="menu-principal-paciente" class="seccion">
+      <h2>Menú principal del Paciente</h2>
+      <!-- Mensaje de bienvenida al paciente -->
+      <p id="welcomeMessage"></p>
+
+      <!-- Muestra por pantalla el médico que está asociado al paciente -->
+      <p id="pacsDoctor"></p>
+
+      <!-- Muestra las observaciones que tiene el paciente que le ha escrito el doctor. -->
+      <p id="observations"></p>
+
+      <select id="filtradoVariables">
+        <option selected disabled>Filtrar las muestras por variables</option> 
+        <option>PESO (Kg)</option>
+        <option>METROS ANDADOS</option>
+        <option>METROS CORRIDOS</option>
+        <option>MINUTOS DE GIMNASIA REALIZADOS</option>
+        <option>TENSIÓN SANGUÍNEA MEDIA (MMGH)</option>
+        <option>SATURACIÓN DE OXÍGENO MEDIA</option>
+        <option>Mostrar todo</option>
+      </select>
+      
+      <!-- Botón del examen, al dar a este botón, todas los valores de las muestras se aumentan en 1. -->
+      <button onclick="incrementarButton()">Incrementar todas las muestras en 1</button>
+      <dl id="variables"></dl>
+
+      <fieldset>
+        <legend>Agregar nueva muestra</legend>
+        <div>
+          <strong>Variable: </strong>
+          <input type="number" autocomplete="off" id="variableNueva" />
+        </div>
+        <div>
+          <strong>Valor: </strong
+          ><input type="text" autocomplete="off" id="valornuevo" />
+        </div>
+        <div>
+          <button onclick="agregarMuestraPaciente()">
+            Agregar nueva Muestra
+          </button>
+        </div>
+      </fieldset>
+
+      <button onclick="cambiarSeccion('infoVariables')">
+        Ver tabla de variables
+      </button>
+      <button onclick="salir()">Salir</button>
+    </div>
+
+    <!-- Interfaz del contenido de las tablas de las variables -->
+    <div id="infoVariables" class="seccion">
+      <h2>Tabla informacional de las variables</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Concepto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>PESO (kG)</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>METROS ANDADOS</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>METROS CORRIDOS</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>MINUTOS DE GIMNASIA REALIZADOS</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>TENSIÓN SANGUÍNEA MEDIA (MMGH)</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>SATURACIÓN DE OXÍGENO MEDIA</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button onclick="cambiarSeccion('menu-principal-paciente')">Volver al menú principal</button>
+      <button onclick="salir()">Salir</button>
+    </div>
+
+    <!-- Interfaz de compartir para el paciente -->
+    <div id="compartir" class="seccion">
+      
+        <h2>Compartir muestras</h2>
+        <div class="share">
+          <input type="radio" id="medico" name="compartirQuien" value="medico"/> A mi médico<br>
+          <input type="radio" id="all" name="compartirQuien" value="all"/> A todos los pacientes<br>
+          <input type="radio" id="someone" name="compartirQuien" value="someone"/> A un solo paciente:<br>
+          <ul id="elegirPacientes"></ul>
+        </div>
+      <button onclick="compartirMuestra()">Compartir Muestra</button>
+      <button onclick="volverDeCompartir()">Volver al menú principal</button>
+    </div>
+
+    <!-- En la web hay que incluir las librerías para navegador -->
+    <script src="rest.js"></script>
+    <script src="rpc.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
