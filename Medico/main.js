@@ -34,8 +34,6 @@ function cambiarSeccion(seccion) {
 
 
 
-
-
 // Guardamos las variables en un objeto global.
 //Función asíncrona, se ejecuta paralelamente con los otros, no hay problemas de flujos.
 // Al cargar la interfaz, ya obtenemos todas las variables de nuestra aplicación.
@@ -44,10 +42,6 @@ var miVar = [];
 rest.get("/api/variable", (estado, respuesta) => {
     miVar = respuesta;
 })
-
-
-
-
 
 
 
@@ -272,27 +266,27 @@ function mostrarFiltrado(id) {
             // console.log(informacionMuestras[i]);
         }
     }
-    if(varFiltrado.innerHTML == ''){
+    if (varFiltrado.innerHTML == '') {
         alert("Este paciente no tiene ninguna muestra asociada con esta variable");
     }
 }
 
-function mostrarConcepto(id){
-    for(var i in miVar){
-        if(miVar[i].id == id){
-            return(miVar[i].nombre)
+function mostrarConcepto(id) {
+    for (var i in miVar) {
+        if (miVar[i].id == id) {
+            return (miVar[i].nombre)
         }
     }
 }
 
-function volverDeDatosPaciente(){
+function volverDeDatosPaciente() {
     cambiarSeccion("menu-principal");
     varFiltrado = document.getElementById("filtroVar");
     varFiltrado.value = varFiltrado[0].value;
 }
 
 // Cuando salimos de la página de datos del paciente, vamos a restablecer los valores predeterminados del select que hemos realizado
-function salirDeDatosPaciente(){
+function salirDeDatosPaciente() {
     cambiarSeccion("login");
     varFiltrado = document.getElementById("filtroVar");
     varFiltrado.value = varFiltrado[0].value;

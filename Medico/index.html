@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf8" />
     <title>RestApi REST</title>
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="shortcut icon" type="image/jpg" href="favicon.jpg">
     <link href="medico.css" rel="stylesheet" type="text/css"/>
     <style>
       .seccion {
@@ -19,16 +19,19 @@
   <body>
     <!-- Título de toda la aplicación -->
     <h1>Aplicación RestApi</h1>
-
+    
     <!-- Interfaz del login para el médico -->
     <div id="login" class="seccion activa">
       <h2>Login del Médico</h2>
-
+      
       <form>
         <div>
           Usuario: <input autocomplete="off" id="usuario" />
         </div>
+    
 
+
+        
         <div>
           Contraseña: <input autocomplete="off" type="password" id="password" />
         </div>
@@ -36,7 +39,7 @@
       <!-- Si tengo el botón dentro del formulario me va a dar error. ??? -->
       <button onclick="logear()">Entrar</button>
     </div>
-
+    
     <!-- Menú principal del médico donde verá sus listados de pacientes -->
     <div id="menu-principal" class="seccion">
       <h2>Menú principal del Médico</h2>

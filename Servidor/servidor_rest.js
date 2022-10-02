@@ -49,7 +49,6 @@ app.get("/api/variable", (req, res) => {
     // Una sentencia de mysql
 
     var sqlVar = "select * from variables";
-
     // Enviamos una sentencia de mysql con un callback que nos van a dar el error o los datos
     conexion.query(sqlVar, function (err, data) {
         if (err) {
