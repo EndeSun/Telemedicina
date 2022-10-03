@@ -12,16 +12,6 @@ header{
     background-color: rgb(214, 229, 248);
 }
 
-
-div{
-    color: #427b9c;
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: 1px;
-    font-size:medium;
-    text-align: center;
-    margin: 15px;
-    
-}
 h1{
     color: #043c70;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
@@ -90,8 +80,8 @@ fieldset{
 	box-shadow: inset 0px 0px 15px #317683;
 	-moz-box-shadow: inset 0px 0px 15px #317683;
     -webkit-box-shadow: inset 0px 0px 15px #317683;
-
 }
+
 dl{
     text-align: left;
 }
@@ -103,19 +93,105 @@ select{
     margin:18px ;
 }
 
-button{
-    color:#427b9c;
+.parFiltro{
+    text-align: left;
+}
+
+#listadoPaciente{
+    border: 20px;
+    display:grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+    grid-column-gap: 10px;
+    grid-row-gap: 1em;
+    margin: 3rem;
+    padding: 2rem;
+}
+
+.pacientes{
+    border: 4px solid rgb(75, 73, 73);
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 15px;
+}
+.pacientes:hover{
+    background-color: rgb(156, 207, 228);
+    transition:all .5s ease-in-out;
+}
+
+#login{
+    color: #427b9c;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: 1px;
     text-align: center;
-    margin:18px ;
-    font-size: medium;
+    margin: 15px;
 }
 
-button:hover{
-    background-color: rgb(151, 151, 146);
+#login div{
+    margin: 15px;
+}
+
+#login form{
+    width:fit-content ;
+    margin: 0 auto;
+}
+
+.navbtn{
+    margin: o auto;
+    text-align: center;
+}
+
+legend{
+    font-weight: bold;
+}
+
+#infoMedico{
+    font-size: large;
+    font-weight: bold;
+}
+
+#infoPaciente{
+    border: 1px solid rgb(122, 117, 117);
+    margin: 3rem;
+    padding: 2rem;
+    width: 60%;
+}
+
+
+
+#infoMuestras{
+    border: 20px;
+    display:grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+    grid-column-gap: 10px;
+    grid-row-gap: 1em;
+    margin: 3rem;
+    padding: 2rem;
+}
+
+.muestras{
+    border: 4px solid rgb(75, 73, 73);
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 15px;
+}
+
+.muestras:hover{
+    background-color: rgb(156, 207, 228);
+    transition:all .5s ease-in-out;
 }
 
 .parFiltro{
-    text-align: left;
+    margin: 0 auto;
+    text-align: center;
+    width: 60%;
+}
+#filtroVar{
+    margin-left: auto;
+    margin-right: auto;
 }

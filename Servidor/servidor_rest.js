@@ -1,3 +1,4 @@
+// Repositorio de github https://github.com/EndeSun/Telemedicina.git
 var express = require("express");
 var app = express();
 
@@ -84,10 +85,12 @@ app.post("/api/medico/login", function (req, res) {
         //Recorremos la lista de los médicos
         for (var i = 0; i < ListaMedico.length; i++) {
             //Si el login está y la contraseña tambiéne está entra en la condición.
+            console.log(ListaMedico[i].login)
             if (medico.login == ListaMedico[i].login && medico.password == ListaMedico[i].password) {
                 return res.status(201).json(ListaMedico[i].id);
             }
         }
+        
         return res.status(403).json("La autenticación (login) no es correcta");
     });
 
@@ -273,9 +276,9 @@ app.put("/api/paciente/:id", (req, res) => {
         }
         else {
             // console.log(pacientes)
-            // Para comprobar si hay algún paciente con el código de acceso
+            // Para comprobar si hay algún paciente con el código de acceso y que no sea el mismo paciente
             for (var j = 0; j < pacientes.length; j++) {
-                if (pacientes[j].codigo_acceso == codigo_acceso) {
+                if (pacientes[j].codigo_acceso == codigo_acceso && id != pacientes[j].id) {
                     return res.status(404).json("Ya hay un paciente con dicho código de acceso");
                 }
             }

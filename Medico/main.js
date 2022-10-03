@@ -134,7 +134,7 @@ function refrescarPagina() {
             pacientesDelMedico = res;
 
             for (i in pacientesDelMedico) { //O también for(var i = 0; i< pacientesDelMedico.length; i++{})
-                parrafoListaPaciente.innerHTML += "<dt>ID: " + pacientesDelMedico[i].id + "</dt><dd>NOMBRE: " + pacientesDelMedico[i].nombre + "</dd><dd>GÉNERO: " + pacientesDelMedico[i].genero + "</dd><dd>FECHA DE NACIMIENTO: " + pacientesDelMedico[i].fecha_nacimiento + "</dd><dd><button onclick='consultarExpediente(" + pacientesDelMedico[i].id + ")'>Consultar Expediente</button></dd>" + "<br/><br/>"
+                parrafoListaPaciente.innerHTML += "<div class='pacientes'><dt>ID: " + pacientesDelMedico[i].id + "</dt><dd>NOMBRE: " + pacientesDelMedico[i].nombre + "</dd><dd>GÉNERO: " + pacientesDelMedico[i].genero + "</dd><dd>FECHA DE NACIMIENTO: " + pacientesDelMedico[i].fecha_nacimiento + "</dd><dd><button class='btn btn-primary' onclick='consultarExpediente(" + pacientesDelMedico[i].id + ")'>Consultar Expediente</button></dd></div>" + "<br/><br/>"
             }
         } else {
 
@@ -206,7 +206,7 @@ function mostrarMuestras() {
                     }
                 }
                 informacionMuestras = res;
-                parrafoDatosMuestras.innerHTML += "<dt>Variable: " + idVar + "</dt><dd>Concepto de la variable: " + nombreVariable + "</dd><dd>Valor: " + res[i].valor + "</dd><dd>Fecha: " + res[i].fecha + "</dd></br>";
+                parrafoDatosMuestras.innerHTML += "<section class='muestras'><dt>Variable: " + idVar + "</dt><dd>Concepto de la variable: " + nombreVariable + "</dd><dd>Valor: " + res[i].valor + "</dd><dd>Fecha: " + res[i].fecha + "</dd></section></br>";
             }
         } else {
             alert(res); //En este caso, el paciente puede no tener muestras asociadas o que puede haberlas borrado.
@@ -262,7 +262,7 @@ function mostrarFiltrado(id) {
     varFiltrado.innerHTML = "";
     for (var i in informacionMuestras) {
         if (informacionMuestras[i].variable == id) {
-            varFiltrado.innerHTML += "<dt>Variable: " + informacionMuestras[i].variable + "</dt><dd>Concepto de la variable: " + mostrarConcepto(informacionMuestras[i].variable) + "</dd><dd>Valor: " + informacionMuestras[i].valor + "</dd><dd>Fecha: " + informacionMuestras[i].fecha + "</dd></br>"
+            varFiltrado.innerHTML += "<section class='muestras'><dt>Variable: " + informacionMuestras[i].variable + "</dt><dd>Concepto de la variable: " + mostrarConcepto(informacionMuestras[i].variable) + "</dd><dd>Valor: " + informacionMuestras[i].valor + "</dd><dd>Fecha: " + informacionMuestras[i].fecha + "</dd></section></br>"
             // console.log(informacionMuestras[i]);
         }
     }
@@ -329,6 +329,7 @@ function cambiarDatos(indice) {
             for (var i = 0; i < respuesta.length; i++) {
                 // Comprobamos que sea el mismo paciente, para pintar los datos del paciente en el input
                 if (idPaciente == respuesta[i].id) {
+                    console.log(respuesta)
                     nombrePaciente.value = respuesta[i].nombre;
                     fechaPaciente.value = respuesta[i].fecha_nacimiento;
                     // El género es diferentes, porque tiene dos opciones, entonces, depende de lo que tenga escrito el médico, que me cree uno u otro. (para facilitar el uso al médico)

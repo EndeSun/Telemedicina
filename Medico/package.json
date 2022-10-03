@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bootstrap": "^5.2.1",
     "cors": "^2.8.5",
     "express": "^4.17.3"
   }

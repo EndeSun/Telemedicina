@@ -28,9 +28,9 @@ pacienteElegir.addEventListener("click", function () {
         }
 
         // Si el médico del paciente no tiene a ningún paciente más, pues que se imprima por pantalla la cadena de texto siguiente.
-        if (electionPaciente.innerHTML == '') {
-            electionPaciente.innerHTML += "Tú médico solo te tiene a ti😊";
-        }
+        // if (electionPaciente.innerHTML == '') {
+        //     electionPaciente.innerHTML += "Tú médico solo te tiene a ti😊";
+        // }
     }
 })
 
@@ -351,7 +351,7 @@ function mostrarMuestras(idPaciente) {
             // muestraPac es una lista de muestras del paciente.
             // Recorremos la lista de muestras del paciente y lo imprimos por pantalla todo el conjunto.
             for (var i = 0; i < muestraPac.length; i++) {
-                variablesPaciente.innerHTML += "<dt>Variable: " + muestraPac[i].variable + "</dt><dd>Fecha: " + muestraPac[i].fecha + "</dd><dd>Valor: " + muestraPac[i].valor + "</dd><dd>Concepto:" + conceptoVariable(muestraPac[i].variable) + "</dd><dd><button onclick='eliminar(" + muestraPac[i].id + ")'>Eliminar</button><button onclick='compartir(" + muestraPac[i].id + ")'>Compartir muestra</button></dd>";
+                variablesPaciente.innerHTML += "<section class='col-12'><dt>Variable: " + muestraPac[i].variable + "</dt><dd>Fecha: " + muestraPac[i].fecha + "</dd><dd>Valor: " + muestraPac[i].valor + "</dd><dd>Concepto:" + conceptoVariable(muestraPac[i].variable) + "</dd><dd><button class='btn btn-primary' onclick='eliminar(" + muestraPac[i].id + ")'>Eliminar</button><button class='btn btn-primary' onclick='compartir(" + muestraPac[i].id + ")'>Compartir muestra</button></dd></section>";
                 muestrasDelPaciente.push(conceptoVariable(muestraPac[i].variable));
                 // Guardamos los nombres de las variables de las muestras del paciente en orden.
                 infoMuestras.push(muestraPac[i]);
@@ -483,7 +483,7 @@ function mostrarFiltrado(id) {
     for (var i = 0; i < infoMuestras.length; i++) {
         // Si el id que se pasa por parámetro es el mismo que el que tiene el paciente. Pues se pinta.
         if (id == infoMuestras[i].variable) {
-            variablesfiltrado.innerHTML += "<dt>Variable: " + infoMuestras[i].variable + "</dt><dd>Fecha: " + infoMuestras[i].fecha + "</dd><dd>Valor: " + infoMuestras[i].valor + "</dd><dd>Concepto: " + muestrasDelPaciente[i] + "</dd><dd><button onclick='eliminar(" + infoMuestras[i].id + ")'>Eliminar</button><button onclick='compartir(" + infoMuestras[i].id + ")'>Compartir muestra</button></dd>";
+            variablesfiltrado.innerHTML += "<section class='col-12'><dt>Variable: " + infoMuestras[i].variable + "</dt><dd>Fecha: " + infoMuestras[i].fecha + "</dd><dd>Valor: " + infoMuestras[i].valor + "</dd><dd>Concepto: " + muestrasDelPaciente[i] + "</dd><dd><button class='btn btn-primary' onclick='eliminar(" + infoMuestras[i].id + ")'>Eliminar</button><button class='btn btn-primary' onclick='compartir(" + infoMuestras[i].id + ")'>Compartir muestra</button></dd></section>";
         }
     }
     if (variablesfiltrado.innerHTML == '') {

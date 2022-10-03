@@ -6,6 +6,7 @@
     <title>RestApi RPC</title>
     <link rel="shortcut icon" type="image/png" href="favicon.png">
     <link href="paciente.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
     <style>
       .seccion {
         display: none;
@@ -29,8 +30,7 @@
           <input type="password" autocomplete="off" id="accessCode" />
         </div>
       </form>
-
-      <button onclick="entrar()">Entrar</button>
+      <button class="btn btn-primary" onclick="entrar()">Entrar</button>
     </div>
 
     <!-- Menú principal del médico donde verá sus listados de pacientes -->
@@ -45,20 +45,32 @@
       <!-- Muestra las observaciones que tiene el paciente que le ha escrito el doctor. -->
       <p id="observations"></p>
 
-      <select id="filtradoVariables">
-        <option selected disabled>Filtrar las muestras por variables</option> 
-        <option>PESO (Kg)</option>
-        <option>METROS ANDADOS</option>
-        <option>METROS CORRIDOS</option>
-        <option>MINUTOS DE GIMNASIA REALIZADOS</option>
-        <option>TENSIÓN SANGUÍNEA MEDIA (MMGH)</option>
-        <option>SATURACIÓN DE OXÍGENO MEDIA</option>
-        <option>Mostrar todo</option>
-      </select>
-      
+      <section class="container">
+
+        <select class='form-select' id="filtradoVariables">
+          <option selected disabled>Filtrar las muestras por variables</option> 
+          <option>PESO (Kg)</option>
+          <option>METROS ANDADOS</option>
+          <option>METROS CORRIDOS</option>
+          <option>MINUTOS DE GIMNASIA REALIZADOS</option>
+          <option>TENSIÓN SANGUÍNEA MEDIA (MMGH)</option>
+          <option>SATURACIÓN DE OXÍGENO MEDIA</option>
+          <option>Mostrar todo</option>
+        </select>
+      </section>
+        
       <!-- Botón del examen, al dar a este botón, todas los valores de las muestras se aumentan en 1. -->
-      <button onclick="incrementarButton()">Incrementar todas las muestras en 1</button>
-      <dl id="variables"></dl>
+      <button class="btn btn-info" onclick="incrementarButton()">Incrementar todas las muestras en 1</button>
+      
+      <section class="container">
+        <div class="row">
+          <dl id="variables"></dl>
+        </div>
+      </section>
+      
+
+
+
 
       <fieldset>
         <legend>Agregar nueva muestra</legend>
@@ -71,29 +83,29 @@
           ><input type="text" autocomplete="off" id="valornuevo" />
         </div>
         <div>
-          <button onclick="agregarMuestraPaciente()">
+          <button class="btn btn-primary" onclick="agregarMuestraPaciente()">
             Agregar nueva Muestra
           </button>
         </div>
       </fieldset>
 
-      <button onclick="cambiarSeccion('infoVariables')">
+      <button class="btn btn-primary" onclick="cambiarSeccion('infoVariables')">
         Ver tabla de variables
       </button>
-      <button onclick="salir()">Salir</button>
+      <button class="btn btn-primary" onclick="salir()">Salir</button>
     </div>
 
     <!-- Interfaz del contenido de las tablas de las variables -->
     <div id="infoVariables" class="seccion">
       <h2>Tabla informacional de las variables</h2>
-      <table>
+      <table class="table table-striped-columns table-hover">
         <thead>
           <tr>
             <th>Variable</th>
             <th>Concepto</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
           <tr>
             <td>1</td>
             <td>PESO (kG)</td>
@@ -121,25 +133,31 @@
         </tbody>
       </table>
 
-      <button onclick="cambiarSeccion('menu-principal-paciente')">Volver al menú principal</button>
-      <button onclick="salir()">Salir</button>
+      <button class="btn btn-primary" onclick="cambiarSeccion('menu-principal-paciente')">Volver al menú principal</button>
+      <button class="btn btn-primary" onclick="salir()">Salir</button>
     </div>
 
     <!-- Interfaz de compartir para el paciente -->
     <div id="compartir" class="seccion">
       
         <h2>Compartir muestras</h2>
-        <div class="share">
-          <input type="radio" id="medico" name="compartirQuien" value="medico"/> A mi médico<br>
-          <input type="radio" id="all" name="compartirQuien" value="all"/> A todos los pacientes<br>
-          <input type="radio" id="someone" name="compartirQuien" value="someone"/> A un solo paciente:<br>
+        <div class="share form-check">
+          <input class="form-check-input" type="radio" id="medico" name="compartirQuien" value="medico"/> A mi médico<br>
+          <input class="form-check-input" type="radio" id="all" name="compartirQuien" value="all"/> A todos los pacientes<br>
+          <input class="form-check-input" type="radio" id="someone" name="compartirQuien" value="someone"/> A un solo paciente:<br>
           <ul id="elegirPacientes"></ul>
         </div>
-      <button onclick="compartirMuestra()">Compartir Muestra</button>
-      <button onclick="volverDeCompartir()">Volver al menú principal</button>
+      <button class="btn btn-primary" onclick="compartirMuestra()">Compartir Muestra</button>
+      <button class="btn btn-primary" onclick="volverDeCompartir()">Volver al menú principal</button>
     </div>
 
+    <footer>
+      <p>
+        Copyright © Telemedicine Aplication Developer 2022
+      </p>
+    </footer>
     <!-- En la web hay que incluir las librerías para navegador -->
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="rest.js"></script>
     <script src="rpc.js"></script>
     <script src="main.js"></script>
