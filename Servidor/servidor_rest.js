@@ -362,7 +362,13 @@ app.put("/api/hospitales/director/:id", (req,res)=>{
     // Tengo que indicar el número del director a que quiero reemplazar
     // Ejecutar en postman!!!!
     // Con que lo ejecutes en postman y señales en la base de datos ya estaría hecho!!!
-    // 
+    // Tienes que tener unos datos en la base de datos: un id un nombre y un director
+    // Ejemplo: 1, hospital de valencia, 2
+    // Pues en postman lo pones en put, pones la url indicando el id como 1 a ese hospital.
+    // Ejemplo: http://localhost:8080/api/hospitales/director/1 <-- este id es el del hospital
+    // Luego pones en el body:
+    // {"director": 3}
+    // Y ejecutas, y verás que se te cambia en la base de datos.
     conexion.query("update hospitales set director = "+ req.body.director +" where id = "+ id +" ", function(err, modificado){
         if (err) {
             return res.status(500).json("Error en la actualización de datos");
