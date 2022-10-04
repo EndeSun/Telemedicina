@@ -1,4 +1,5 @@
 // Repositorio de github https://github.com/EndeSun/Telemedicina.git
+const { query } = require("express");
 var express = require("express");
 var app = express();
 
@@ -90,7 +91,7 @@ app.post("/api/medico/login", function (req, res) {
                 return res.status(201).json(ListaMedico[i].id);
             }
         }
-        
+
         return res.status(403).json("La autenticación (login) no es correcta");
     });
 
@@ -329,6 +330,65 @@ app.get("/api/paciente/:id/muestras", (req, res) => {
 });
 
 
+
+// Donde he modificadooo
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+
+// 
+// 
+
+// 
+// 
+// 
+// 
+// 
+
+app.put("/api/hospitales/director/:id", (req,res)=>{
+    // El id del hospital a que quiero cambiar.
+    // Este id es el id del hospital
+    var id = req.params.id;
+
+    // Tengo que indicar el número del director a que quiero reemplazar
+    // Ejecutar en postman!!!!
+    conexion.query("update hospitales set director = "+ req.body.director +" where id = "+ id +" ", function(err, modificado){
+        if (err) {
+            return res.status(500).json("Error en la actualización de datos");
+        } else {
+            return res.status(200).json("Correcto");
+        }
+    })
+})
+
+// app.post("/api/paciente/:id/duplicar", (req, res) => {
+//     var id = req.params.id;
+
+
+//     conexion.query("select * from pacientes where id = " + id, function (err, pacienteADuplicar) {
+//         if (err) {
+//             return res.status(500).json("Error en la recuperación de datos");
+//         } else {
+//             conexion.query("insert into pacientes (nombre,fecha_nacimiento,genero,medico,codigo_acceso,observaciones) values('" + pacienteADuplicar[0].nombre + "','" + pacienteADuplicar[0].fecha_nacimiento + "','" + pacienteADuplicar[0].genero + "','" + pacienteADuplicar[0].medico + "','" + pacienteADuplicar[0].codigo_acceso + "','" + pacienteADuplicar[0].observaciones + "')", function (err2, pacienteDuplicar) {
+//                 if (err2) {
+//                     return res.status(500).json("Error en la inserción de datos");
+//                 }else{
+//                     console.log(pacienteDuplicar);
+//                     return res.status(200).json("Correcto");
+//                 }
+//             })
+//         }
+//     })
+// })
 // Preparando para el examen:
 // Método get
 // app.get("/api/", (req, res) => {

@@ -137,16 +137,19 @@ function refrescarPagina() {
                 parrafoListaPaciente.innerHTML += "<div class='pacientes'><dt>ID: " + pacientesDelMedico[i].id + "</dt><dd>NOMBRE: " + pacientesDelMedico[i].nombre + "</dd><dd>GÉNERO: " + pacientesDelMedico[i].genero + "</dd><dd>FECHA DE NACIMIENTO: " + pacientesDelMedico[i].fecha_nacimiento + "</dd><dd><button class='btn btn-primary' onclick='consultarExpediente(" + pacientesDelMedico[i].id + ")'>Consultar Expediente</button></dd></div>" + "<br/><br/>"
             }
         } else {
-
             alert(res); //Si se borran todos los pacientes, salta la alerta que este médico no tiene asignado ningún paciente o si el médico no tiene pacientes como en este caso, Paula, que salga la alerta.
         }
     })
 }
 
 
-
-
-
+// function duplicarPaciente(id){
+//     rest.post("/api/paciente/"+id+"/duplicar", [] ,(estado, paciente)=>{
+//         if(estado==200){
+//             refrescarPagina();
+//         }
+//     })
+// }
 
 
 
@@ -296,8 +299,6 @@ function salirDeDatosPaciente() {
     userName.value = "";
     userPassword.value = "";
 }
-
-
 
 
 

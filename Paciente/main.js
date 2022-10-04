@@ -238,6 +238,7 @@ function entrar() {
                 //Empiezan a ejecutarse.
                 adivinarMedico(paciente.medico);
                 mostrarMuestras(paciente.id);
+
             });
 
 
@@ -361,6 +362,8 @@ function mostrarMuestras(idPaciente) {
         }
     })
 }
+
+
 
 
 
