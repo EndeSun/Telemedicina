@@ -178,7 +178,7 @@ function cambiarSeccion(seccion) {
 // Función para mostrar los nombres de las variables que tiene el paciente
 // Función 2 del servidor
 // Es una función asíncrona, es decir, se ejecuta en paralelo. Obtengo estas variables al principio.
-nombreVariables = [];
+var nombreVariables = [];
 listadoVariables(function (variables) {
     nombreVariables = variables;
 })
@@ -405,15 +405,15 @@ function agregarMuestraPaciente() {
     var variable = document.getElementById("variableNueva").value;
     variable = parseInt(variable)
 
-    var valor = document.getElementById("valornuevo").value
-    valor = parseInt(valor);
+    var valorVariable = document.getElementById("valornuevo").value
+    valorVariable = parseInt(valorVariable);
 
     // La fecha por defecto es ahora.
     var date = new Date();
     var fecha = date.toISOString().split("T")[0];
 
     // Función 5 del servidor
-    agregarMuestra(idPac, variable, fecha, valor, function (valor) {
+    agregarMuestra(idPac, variable, fecha, valorVariable, function (valor) {
         if (valor == -1) {
             alert("Falta algún campo por rellenar o has introducido un número de variable no existente")
             document.getElementById("variableNueva").value = "";
@@ -506,3 +506,289 @@ function salir() {
     codigo.value = "";
     conexion.close();
 }
+
+
+// Creamos una función para mostrar el nombre de la muestra
+function nombreMuestra(idMuestra) {
+    switch (idMuestra) {
+        case 1:
+            return "peso";
+        case 2:
+            return "metros_andados"
+        case 3:
+            return "metros_corridos"
+    }
+}
+
+function enviarTodasLasMuestras() {
+    // Para crear la fecha de envío de las muestras del paciente.
+    var hoy = new Date();
+    var dd = hoy.getDate();
+    var mm = hoy.getMonth();
+    var yyyy = hoy.getFullYear();
+    var fechaHoy = yyyy + "-" + mm + "-" + dd;
+
+    // los datos de las muestras, los voy almacenando aquí;
+    var datosPaciente = [];
+
+    // Acordamos que tenemos una variable global infoMuestras que contiene todas las muestras del paciente.
+    for (var i = 0; i < infoMuestras.length; i++) {
+        // Solo queremos esas tres variables, si no son estas tres variables no entra al bucle.
+        if (infoMuestras[i].variable == 1 || infoMuestras[i].variable == 2 || infoMuestras[i].variable == 3) {
+            // Cada vez que encuentre una muestra, creo esta variable en json para meterlo en el array datos.
+            var muestraPaciente = {
+                paciente: pac.nombre,
+                fecha: infoMuestras[i].fecha,
+                valor: infoMuestras[i].valor,
+                variable: nombreMuestra(infoMuestras[i].variable)
+            }
+            datosPaciente.push(muestraPaciente);
+        }
+    }
+    var cuerpo = {
+        id_area: 15, //Id area asignado por el profesor en la práctica
+        fecha: fechaHoy,
+        datos: datosPaciente
+    }
+
+    rest.post('https://undefined.ua.es/telemedicina/api/datos', cuerpo, (estado, respuesta) => {
+        if (estado == 201) {
+            console.log("Todo correcto");
+        } else {
+            console.log("Malo");
+        }
+    })
+}
+
+
+// ------------------------------------------------------------------------------------------------
+function filtrarRankNac() {
+    // Obtengo donde voy a imprimir el ranking y lo vacío siempre cuando pulsa e botón.
+    var listaRankNac = document.getElementById("listaNac");
+    listaRankNac.innerHTML = "";
+
+    // El valor del select que tengo seleccionado en el momento cuando hago click al botón.
+    var filtroRankNac = document.getElementById("rankNacFiltro").value;
+
+    // Para asegurar que el paciente seleccione una variable para filtrar.
+    if (filtroRankNac == "Seleccione variable para filtrar") {
+        alert("Por favor, seleccione una variable para filtrar")
+        return;
+    }
+
+    // Esta variable va a almacenar todas las muestras para ordenarla.
+    var listaParaFiltrar = [];
+    var listaParaOrdenar = [];
+
+    rest.get("https://undefined.ua.es/telemedicina/api/datos", (estado, respuesta) => {
+        if (estado == 200) {
+            try {
+                // Para recorrer toda la información cruda
+                for (let i = 0; i < respuesta.length; i++) {
+
+                    // console.log("Cada información", respuesta[i]); Si imprimos la informacion, en la consola solo es posible mostrar
+                    // cierta cantidad de iteraciones, no es posible mostrar todas las iteraciones, HAY QUE TENERLO EN CUENTA
+
+                    // Primer filtro que le pasamos, la respuesta tiene que tener un campo datos, si no no lo recoge.
+                    for (let j = 0; j < respuesta[i].datos.length; j++) {
+                        // Metemos toda la información en un array para poder tratarlos, por ejemplo eliminar todos los valores nulos primeros.
+                        listaParaFiltrar.push(respuesta[i].datos[j])
+                    }
+                }
+                // console.log(listaParaFiltrar);
+                // Para eliminar los valores nulos.
+                var filtradoNulo = listaParaFiltrar.filter(e => e != null);
+                // console.log(filtradoNulo);
+                // Para eliminar todos los valores falsos --> false, 0, "" '' `` null undefined y NaN.
+                var filtradoVacio = filtradoNulo.filter(Boolean);
+                // console.log(filtradoVacio);
+                for (var l in filtradoVacio) {
+                    if (filtradoVacio[l].variable == filtroRankNac) {
+                        listaParaOrdenar.push(filtradoVacio[l])
+                    }
+                }
+                // console.log(listaParaOrdenar);
+
+                var listaConNumerosBuenos = [];
+
+                for (let m = 0; m < listaParaOrdenar.length; m++) {
+                    if (typeof (listaParaOrdenar[m].valor) === "number" && typeof (listaParaOrdenar[m].paciente) != "number") {
+                        listaConNumerosBuenos.push(listaParaOrdenar[m])
+                    };
+                }
+                // console.log(listaConNumerosBuenos);
+
+                listaConNumerosBuenos.sort(function (a, b) {
+                    if (b.valor > a.valor) {
+                        return 1;
+                    }
+                    if (b.valor < a.valor) {
+                        return -1;
+                    }
+                    // a must be equal to b
+                    return 0;
+                });
+
+                // console.log(listaConNumerosBuenos);
+
+                // Que muestre solo los primeros veinte pacientes
+                for (let k = 0; k < 20; k++) {
+                    listaRankNac.innerHTML += "<li>" + (k + 1) + ". Valor: " + listaConNumerosBuenos[k].valor + " Paciente: " + listaConNumerosBuenos[k].paciente + "</li>"
+                }
+
+            }
+            // Captura de errores para que siga ejecutando aunque en caso de error --> Valor nulo en el array
+            catch (e) {
+                console.log(e.message);
+            }
+        } else {
+            console.log("Error en la recuperación de los datos")
+        }
+    })
+}
+
+function filtrarRankAut() {
+    var listaRankAuto = document.getElementById("listaAuto");
+    listaRankAuto.innerHTML = "";
+
+    // El valor del select que tengo seleccionado en el momento cuando hago click al botón.
+    var filtroRankAuto = document.getElementById("rankAutFiltro").value;
+    var filtroRankAutoVar = document.getElementById('rankAutFiltroVar').value;
+    // Para asegurar que el paciente seleccione una Comunidad Autónoma para filtrar.
+    if (filtroRankAuto == "Seleccione Comunidad Autónoma para filtrar") {
+        alert("Por favor, seleccione una Comunidad Autónoma para filtrar")
+        return;
+        // Para asegurar que el paciente seleccione una variable para filtrar
+    } else if (filtroRankAutoVar == "Seleccione variable para filtrar") {
+        alert("Por favor, seleccione una variable para filtrar")
+        return;
+    } else {
+
+        var listaAutoParaFiltrar4 = [];
+        var listaAutoParaFiltrar3 = [];
+        var listaAutoParaFiltrar2 = [];
+        var listaAutoParaFiltrar = [];
+
+        rest.get("https://undefined.ua.es/telemedicina/api/datos", (estado, respuesta) => {
+            if (estado == 200) {
+                // La respuesta contiene todo, y nosotros solo queremos los datos del id_area seleccionado.
+                for (let i = 0; i < respuesta.length; i++) {
+                    if (respuesta[i].id_area == filtroRankAuto) {
+                        listaAutoParaFiltrar.push(respuesta[i]);
+                    }
+                }
+                // console.log(listaAutoParaFiltrar);
+
+                for (let j = 0; j < listaAutoParaFiltrar.length; j++) {
+                    listaAutoParaFiltrar2.push(listaAutoParaFiltrar[j].datos);
+                }
+
+                // console.log(listaAutoParaFiltrar2);
+
+                var filtradoAutoNulo = listaAutoParaFiltrar2.filter(e => e != null);
+                // console.log(filtradoAutoNulo);
+                // Para eliminar todos los valores falsos --> false, 0, "" '' `` null undefined y NaN.
+                var filtradoAutoVacio = filtradoAutoNulo.filter(Boolean);
+                // console.log(filtradoAutoVacio);
+
+                // filtro para seleccionar las variables correctas, aquí todavía es un objeto complejo de datos, por eso se utiliza un doble for para meterse dentro
+                for (var k in filtradoAutoVacio) {
+                    for (var l in filtradoAutoVacio[k]) {
+                        // console.log(filtradoAutoVacio[k][l]);
+                        if (filtradoAutoVacio[k][l]?.variable == filtroRankAutoVar) {
+                            listaAutoParaFiltrar3.push(filtradoAutoVacio[k][l])
+                        }
+                    }
+                }
+
+
+                // Función para ordenar según el valor
+                listaAutoParaFiltrar3.sort(function (a, b) {
+                    if (b.valor > a.valor) {
+                        return 1;
+                    }
+                    if (b.valor < a.valor) {
+                        return -1;
+                    }
+                    // a must be equal to b
+                    return 0;
+                });
+
+                console.log("Valores ordenados", listaAutoParaFiltrar3);
+
+                for (let n = 0; n < listaAutoParaFiltrar3.length; n++) {
+                    if ((listaAutoParaFiltrar3[n].valor != undefined || listaAutoParaFiltrar3[n].paciente != undefined) && (typeof (listaAutoParaFiltrar3[n].paciente) != "number")) {
+                        listaAutoParaFiltrar4.push(listaAutoParaFiltrar3[n]);
+                    }
+                }
+
+                console.log("Valores filtrados", listaAutoParaFiltrar4);
+
+                if (listaAutoParaFiltrar4.length <= 20) {
+                    for (let m = 0; m < listaAutoParaFiltrar4.length; m++) {
+                        listaRankAuto.innerHTML += "<li>" + (m + 1) + ". Valor: " + listaAutoParaFiltrar4[m]?.valor + " Paciente: " + listaAutoParaFiltrar4[m]?.paciente + "</li>"
+                    }
+                } else {
+                    for (let m = 0; m < 20; m++) {
+                        listaRankAuto.innerHTML += "<li>" + (m + 1) + ". Valor: " + listaAutoParaFiltrar4[m]?.valor + " Paciente: " + listaAutoParaFiltrar4[m]?.paciente + "</li>"
+                    }
+                }
+
+
+
+            } else {
+                console.log("Error en la recuperación de datos");
+            }
+        });
+    }
+}
+
+// function mNum(){
+//     console.log("Entra");
+//     rest.get("https://undefined.ua.es/telemedicina/api/datos",function(estado,respuesta){
+//         if(estado == 200){
+//             // console.log(respuesta);
+//             // console.log(respuesta[1034].datos);
+//             var suma = 0;
+//             for(let i = 0; i < respuesta[1034].datos.length; i++){
+//                 // console.log(respuesta[1034].datos[i]);
+//                 if(respuesta[1034].datos[i].paciente != "" && typeof(respuesta[1034].datos[i].valor) === "number" && respuesta[1034].datos[i].variable == "metros_andados" && typeof(respuesta[1034].datos[i].paciente) !== "number" && respuesta[1034].datos[i].paciente != undefined){
+//                     suma += respuesta[1034].datos[i].valor;
+//                     // console.log(respuesta[1034].datos[i]);
+//                 }
+//             }
+//             console.log(suma);
+//         }
+//     })
+// }
+
+// function mostrar100(num) {
+//     // var obtener = document.getElementById('prueba').value;
+//     // console.log(obtener);
+//     // console.log("Hola");
+//     rest.get("https://undefined.ua.es/telemedicina/api/datos", function (estado, respuesta) {
+//         // console.log(respuesta);
+//         if (estado == 200) {
+//             for (var i = 0; i < respuesta.length; i++) {
+//                 // console.log(respuesta[i]);
+//                 // console.log(respuesta[i].datos);
+//                 for (var k = 0; k < respuesta[i].datos.length; k++) {
+//                     // console.log(respuesta[i].datos[k]);
+//                     if (respuesta[i].datos[k].valor == num && respuesta[i].datos[k].paciente != "" && typeof(respuesta[i].datos[k].valor) === "number" && typeof(respuesta[i].datos[k].paciente) !== "number" && respuesta[i].datos[k].paciente != undefined) {
+//                         console.log(respuesta[i].datos[k]);
+//                     }
+//                 }
+//             }
+//         }
+//     })
+// }
+
+// function intervaloValor(num1,num2){
+//     rest.get("https://undefined.ua.es/telemedicina/api/datos", (estado,respuesta)=>{
+//         if(estado == 200){
+//             for(let i = 0; i < respuesta.length; i++){
+//                 console.log(respuesta[i]);
+//             }
+//         }
+//     })
+// }

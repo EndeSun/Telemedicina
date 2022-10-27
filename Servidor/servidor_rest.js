@@ -6,6 +6,9 @@ var app = express();
 // El que tiene todas los protocolos de comunicación de Mysql para que el servidor lo entienda
 const mysql = require("mysql");
 
+var jwt = require('jwt-simple');
+var clave = 'miSecreto';
+
 // La base de datos, en formato de json
 const basedatos = {
     // Los datos son los que has creado antes en la base de datos
@@ -44,22 +47,7 @@ app.use(express.json()); // en el req.body tengamos el body JSON
 // • 403: Si la autenticación (login) no es correcta
 
 
-// Utilizado para mostrar el concepto de las variables
-// URL 1, 
-app.get("/api/variable", (req, res) => {
-    // Una sentencia de mysql
 
-    var sqlVar = "select * from variables";
-    // Enviamos una sentencia de mysql con un callback que nos van a dar el error o los datos
-    conexion.query(sqlVar, function (err, data) {
-        if (err) {
-            console.error("Error en la recuperación de datos", err);
-            return;
-        }
-        // console.log("Datos obtenidos", data);
-        res.status(200).json(data);
-    });
-})
 
 // Realiza un login para el médico, en body se indican las credenciales. Por ejemplo: {"login": "xxx", "password": "secreto"}, si va bien se obtiene el id del médico
 
@@ -76,6 +64,15 @@ app.post("/api/medico/login", function (req, res) {
 
     var sqlListaMedico = "select * from listamedico";
 
+    // if (req.body.usuario == "alberto" && req.body.password == "secreto") {
+    //     // Crear un token
+    //Lo genera aquí el token
+    // res.status(200).json(token);
+    // } else {
+    //     res.status(301).json("Usuario Incorrecto");
+    // }
+
+
     conexion.query(sqlListaMedico, function (err, ListaMedico) {
         if (err) {
             console.error("Error en la recuperación de datos", err);
@@ -85,9 +82,20 @@ app.post("/api/medico/login", function (req, res) {
         //Recorremos la lista de los médicos
         for (var i = 0; i < ListaMedico.length; i++) {
             //Si el login está y la contraseña tambiéne está entra en la condición.
-            console.log(ListaMedico[i].login)
             if (medico.login == ListaMedico[i].login && medico.password == ListaMedico[i].password) {
-                return res.status(201).json(ListaMedico[i].id);
+
+                var contenido = { // contenido del token (se puede incluir la información que necesitemos)
+                    usuario: 1,
+                    expira: Date.now() + 60 * 60 * 1000 // expira dentro de 1 hora (en ms)
+                };
+                var token = jwt.encode(contenido, clave);
+
+                var credenciales = {
+                    token: token,
+                    id: ListaMedico[i].id
+                }
+
+                return res.status(201).json(credenciales);
             }
         }
 
@@ -96,6 +104,55 @@ app.post("/api/medico/login", function (req, res) {
 
 
 });
+
+// Tokens
+app.use("/api", function (req, res, next) {
+    var token = req.query.token; // obtengo el token de una query de la URL: http://MI_SERVIDOR/MI_RUTA?token=XXXXXXXX
+    if (!token) { // no se ha pasado un token
+        res.status(301).json("No se ha encontrado token");
+        return;
+    }
+
+    // Decodificar el token
+    try { // capturamos el error por si el token no es correcto
+        var contenidoToken = jwt.decode(token, clave); // decodificamos el token para obtener su contenido con la misma clave que se codificó
+    } catch (error) {
+        res.status(301).json("El token es incorrecto");
+        return;
+    }
+    console.log("El contenido del token es:", contenidoToken);
+
+    // Validar el token
+    if (!contenidoToken || !contenidoToken.expira || !contenidoToken.usuario) { // validamos el formato del token
+        res.status(301).json("El formato del token no es adecuado")
+        return;
+    }
+
+    // Comprobar la fecha de expiración
+    if (contenidoToken.expira < Date.now()) {
+        res.status(301).json("El token ha expirado");
+        return
+    }
+    // Todo ha ido bien. con next hago que express continue con el procesado
+    next();
+});
+
+// Utilizado para mostrar el concepto de las variables
+// URL 1, 
+app.get("/api/variable", (req, res) => {
+    // Una sentencia de mysql
+
+    var sqlVar = "select * from variables";
+    // Enviamos una sentencia de mysql con un callback que nos van a dar el error o los datos
+    conexion.query(sqlVar, function (err, data) {
+        if (err) {
+            console.error("Error en la recuperación de datos", err);
+            return;
+        }
+        // console.log("Datos obtenidos", data);
+        res.status(200).json(data);
+    });
+})
 
 // /api/paciente/:id get -->Obtiene los datos del paciente indicado (no devolver código de acceso)
 // URL 3,
@@ -329,12 +386,12 @@ app.get("/api/paciente/:id/muestras", (req, res) => {
 });
 
 
-app.put("/api/hospitales/director/:id", (req,res)=>{
+app.put("/api/hospitales/director/:id", (req, res) => {
     // El id del hospital a que quiero cambiar.
     // Este id es el id del hospital
     var id = req.params.id;
-    
-    conexion.query("update hospitales set director = "+ req.body.director +" where id = "+ id +" ", function(err, modificado){
+
+    conexion.query("update hospitales set director = " + req.body.director + " where id = " + id + " ", function (err, modificado) {
         if (err) {
             return res.status(500).json("Error en la actualización de datos");
         } else {

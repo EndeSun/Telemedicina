@@ -5,6 +5,9 @@ body {
   margin-top: center;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 div {
@@ -111,4 +114,31 @@ ul {
 #variables .col-12:hover{
   background-color: #a3caee;
   transition: all 1.5s ease-in-out;
+}
+footer {
+  margin-top: auto;
+}
+
+#rankingNacional{
+  margin-right: 20rem;
+
+
+}
+
+#rankingAuto{
+
+  margin-left: 20rem;
+
+}
+
+.container button{
+  margin: 0;
+}
+
+.lista ol li{
+  list-style-type: none;
+}
+
+#listaAuto li{
+  list-style-type: none;
 }

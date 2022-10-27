@@ -4,9 +4,12 @@
   <head>
     <meta charset="utf8" />
     <title>RestApi RPC</title>
-    <link rel="shortcut icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" type="image/png" href="favicon.png" />
     <link href="paciente.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.css"
+    />
     <style>
       .seccion {
         display: none;
@@ -17,7 +20,6 @@
     </style>
   </head>
 
-  
   <body>
     <h1>Aplicación del paciente</h1>
 
@@ -46,9 +48,8 @@
       <p id="observations"></p>
 
       <section class="container">
-
-        <select class='form-select' id="filtradoVariables">
-          <option selected disabled>Filtrar las muestras por variables</option> 
+        <select class="form-select" id="filtradoVariables">
+          <option selected disabled>Filtrar las muestras por variables</option>
           <option>PESO (Kg)</option>
           <option>METROS ANDADOS</option>
           <option>METROS CORRIDOS</option>
@@ -58,20 +59,68 @@
           <option>Mostrar todo</option>
         </select>
       </section>
-        
+
       <!-- Botón del examen, al dar a este botón, todas los valores de las muestras se aumentan en 1. -->
-      <button class="btn btn-info" onclick="incrementarButton()">Incrementar todas las muestras en 1</button>
+      <button class="btn btn-info" onclick="incrementarButton()">
+        Incrementar todas las muestras en 1
+      </button>
       <section class="container">
         <div class="row">
           <dl id="variables"></dl>
         </div>
-
-        
       </section>
-      
+
+      <!-- Botón para enviar todas las muestras de ese paciente -->
+      <button class="btn btn-secondary" onclick="enviarTodasLasMuestras()">Enviar muestras del paciente</button>
 
 
+      <!-- Sección para mostrar el ranking nacional según la variable seleccionada -->
+      <section id="rankNac">
+        <button class="btn btn-info" onclick="filtrarRankNac()">Ranking Nacional</button>
+        <p><select id="rankNacFiltro">
+          <option selected disabled>Seleccione variable para filtrar</option>
+          <option value="peso">peso</option>
+          <option value="metros_andados">metros_andados</option>
+          <option value="metros_corridos">metros_corridos</option>
+        </select></p>
 
+        <div class="lista">
+          <ol id="listaNac"></ol>
+        </div>
+
+      </section>
+
+      <section id="rankAut">
+        <button class="btn btn-info" onclick="filtrarRankAut()">Ranking Autonómico</button>
+        <p><select id="rankAutFiltro">
+          <option selected disabled>Seleccione Comunidad Autónoma para filtrar</option>
+          <option value="1">1. Andalucía</option>
+          <option value="2">2. Aragón</option>
+          <option value="3">3. Asturias</option>
+          <option value="4">4. Islas Baleares</option>
+          <option value="5">5. Canarias</option>
+          <option value="6">6. Cantabria</option>
+          <option value="7">7. Castilla-La Macha</option>
+          <option value="8">8. Castilla y León</option>
+          <option value="9">9. Cataluña</option>
+          <option value="10">10. Comunidad de Madrid</option>
+          <option value="11">11. Comunidad Foral de Navarra</option>
+          <option value="12">12. Comunidad Valenciana</option>
+          <option value="13">13. Extremadura</option>
+          <option value="14">14. Galicia</option>
+          <option value="15">15. País Vasco</option>
+          <option value="16">16. Principado de Asturias</option>
+          <option value="17">17. Región de Murcia</option>
+          <option value="18">18. La Rioja</option>
+        </select></p>
+        <p><select id="rankAutFiltroVar">
+          <option selected disabled>Seleccione variable para filtrar</option>
+          <option value="peso">peso</option>
+          <option value="metros_andados">metros_andados</option>
+          <option value="metros_corridos">metros_corridos</option>
+        </select></p>
+        <ol id="listaAuto"></ol>
+      </section>
 
       <fieldset>
         <legend>Agregar nueva muestra</legend>
@@ -134,28 +183,55 @@
         </tbody>
       </table>
 
-      <button class="btn btn-primary" onclick="cambiarSeccion('menu-principal-paciente')">Volver al menú principal</button>
+      <button
+        class="btn btn-primary"
+        onclick="cambiarSeccion('menu-principal-paciente')"
+      >
+        Volver al menú principal
+      </button>
       <button class="btn btn-primary" onclick="salir()">Salir</button>
     </div>
 
     <!-- Interfaz de compartir para el paciente -->
     <div id="compartir" class="seccion">
-      
-        <h2>Compartir muestras</h2>
-        <div class="share form-check">
-          <input class="form-check-input" type="radio" id="medico" name="compartirQuien" value="medico"/> A mi médico<br>
-          <input class="form-check-input" type="radio" id="all" name="compartirQuien" value="all"/> A todos los pacientes<br>
-          <input class="form-check-input" type="radio" id="someone" name="compartirQuien" value="someone"/> A un solo paciente:<br>
-          <ul id="elegirPacientes"></ul>
-        </div>
-      <button class="btn btn-primary" onclick="compartirMuestra()">Compartir Muestra</button>
-      <button class="btn btn-primary" onclick="volverDeCompartir()">Volver al menú principal</button>
+      <h2>Compartir muestras</h2>
+      <div class="share form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="medico"
+          name="compartirQuien"
+          value="medico"
+        />
+        A mi médico<br />
+        <input
+          class="form-check-input"
+          type="radio"
+          id="all"
+          name="compartirQuien"
+          value="all"
+        />
+        A todos los pacientes<br />
+        <input
+          class="form-check-input"
+          type="radio"
+          id="someone"
+          name="compartirQuien"
+          value="someone"
+        />
+        A un solo paciente:<br />
+        <ul id="elegirPacientes"></ul>
+      </div>
+      <button class="btn btn-primary" onclick="compartirMuestra()">
+        Compartir Muestra
+      </button>
+      <button class="btn btn-primary" onclick="volverDeCompartir()">
+        Volver al menú principal
+      </button>
     </div>
 
     <footer>
-      <p>
-        Copyright © Telemedicine Aplication Developer 2022
-      </p>
+      <p>Copyright © Telemedicine Aplication Developer 2022</p>
     </footer>
     <!-- En la web hay que incluir las librerías para navegador -->
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>

@@ -21,6 +21,7 @@ var idPaciente = "";
 var nombrePaciente = "";
 var idVariable = "";
 var nombreMedico = "";
+var token = "";
 
 // Aquí definimos la función de cambiar la sección en cada momento que se quiera.
 //Definimos la función de cambiar secciones, el login es la sección actual (la primera interfaz que tenemos)
@@ -62,14 +63,19 @@ function logear() {
     rest.post('/api/medico/login', datosLogin, (estado, res) => {
         if (estado == 201) {
             //El método post nos devuelve el id del médico
-            idMedico = res; //El id del médico es una variable global.
+           
+
+            idMedico = res.id; //El id del médico es una variable global.
+            token = res.token
+            // console.log(idMedico);
+            // console.log(token);
             var saludo = document.getElementById("saludo");
             //Siempre hay que vaciarlo, si no se va escribiéndose cada vez que invocamos esta función (entrar, salir).
             saludo.innerHTML = "";
 
             // No puedo sacarlo fuera porque se trata de una función asíncrona, 
             //Función 4 del servidor.
-            rest.get("/api/medico/" + idMedico, (estado, res) => {
+            rest.get("/api/medico/" + idMedico+"?token="+token, (estado, res) => {
                 //Nos devuelve un objeto médico con el id, nombre y login
                 if (estado == 200) {
                     //Obtenemos el nombre del médico.
@@ -127,7 +133,7 @@ function refrescarPagina() {
     parrafoListaPaciente.innerHTML = ""; // Se pone vacío primero para cada vez que entre no vaya sumando
 
     // Función 5 del servidor.
-    rest.get('/api/medico/' + idMedico + '/pacientes', (estado, res) => {
+    rest.get('/api/medico/' + idMedico + '/pacientes?token='+token, (estado, res) => {
         if (estado == 200) {
             // En este caso, la respuesta es una lista de pacientes del médico con ese id .
             // Lo guardamos en una variable externa.
@@ -166,7 +172,7 @@ function consultarExpediente(indice) {
     parrafoDatosPaciente.innerHTML = "";
 
     // Función 3 del servidor.
-    rest.get('/api/paciente/' + idPaciente, (estado, res) => {
+    rest.get('/api/paciente/'+ idPaciente+"?token="+token, (estado, res) => {
         if (estado == 200) {
             // En este caso, la respuesta es un objeto paciente con su id, nombre, medico y observaciones.
             parrafoDatosPaciente.innerHTML += "<dt>ID: " + res.id + "</dt><dd>NOMBRE: " + res.nombre + "</dd><dd>OBSERVACIONES: " + res.observaciones + "</dd><dd><button onclick='cambiarDatos(" + res.id + ")'>Modificar datos del paciente</button></dd>" + "<br/><br/>"
@@ -195,7 +201,7 @@ function mostrarMuestras() {
     // Creamos una variable global para guardar la infomación de las muestras para el filtrado de los valores
     informacionMuestras = "";
     // Función 8 del servidor.
-    rest.get("/api/paciente/" + idPaciente + "/muestras", (estado, res) => {
+    rest.get("/api/paciente/" + idPaciente + "/muestras?token="+token, (estado, res) => {
         if (estado == 200) {
             // En este caso nos devuelve una lista de muestras ordenados según su id y fech del paciente
             for (var i = 0; i < res.length; i++) {
@@ -324,7 +330,7 @@ function cambiarDatos(indice) {
     var observacionesPaciente = document.getElementById("observationsCambio");
 
     // Función 5 del servidor
-    rest.get("/api/medico/" + idMedico + "/pacientes", (estado, respuesta) => {
+    rest.get("/api/medico/" + idMedico + "/pacientes?token="+token, (estado, respuesta) => {
         if (estado == 200) {
             // La respuesta es una lista de pacientes del médico.
             for (var i = 0; i < respuesta.length; i++) {
@@ -370,7 +376,7 @@ function actualizarDatosPaciente() {
     }
 
     // Comprobamos si el id del médico que introduce existe o no
-    rest.get("/api/medico/" + cambioPaciente.medico, (estado, respuesta) => {
+    rest.get("/api/medico/" + cambioPaciente.medico+"?token="+token, (estado, respuesta) => {
         if (estado == 200) {
 
             // Función 7 del servidor.
@@ -415,7 +421,7 @@ function addPacienteDentro() {
     }
     // Acordemos que el id es del médico y no del paciente.
     // Función 6 del servidor.
-    rest.post("/api/medico/" + idMedico + "/pacientes", nuevoPaciente, (estado, respuesta) => {
+    rest.post("/api/medico/" + idMedico + "/pacientes?token="+token, nuevoPaciente, (estado, respuesta) => {
         if (estado == 201) {
             // La respuesta es que nos devuelve el paciente nuevo.
             // Al añadir cambiamos al menú principal del médico y mostramos de nuevo los pacientes que tiene ese médico.
@@ -447,7 +453,7 @@ function datosUsuario() {
     var parrafoInfoMedico = document.getElementById("infoMedico");
     parrafoInfoMedico.innerHTML = "";
     // Función 4 del servidor.
-    rest.get("/api/medico/" + idMedico, (estado, respuesta) => {
+    rest.get("/api/medico/" + idMedico+"?token="+token, (estado, respuesta) => {
         if (estado == 200) {
             // Nos devuelve un objeto médico con el id, nombre y login.
             parrafoInfoMedico.innerHTML += "ID USUARIO: " + respuesta.id + "<br/>NOMBRE: " + respuesta.nombre + "<br/>LOGIN: " + respuesta.login + "<br/><br/>";
