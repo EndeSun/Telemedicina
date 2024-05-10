@@ -1,19 +1,4 @@
-# Distribuidos
-*Cursiva*
-**negrita**
-*Ejercicios de distribuidos*
-Lista numerada
-1. Elemento
-2. Elemento
-3. Elemento
-
-Lista sin numerar
-* Elemento
-* Elemento
-* Elemento
-
-\ Para escapar carácteres
-
+# Telemedicina
 En el servidor se alojan todos las tecnologías:
 REST
 RPC
